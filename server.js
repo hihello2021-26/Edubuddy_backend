@@ -32,7 +32,33 @@ if (process.env.ENABLE_CRON && process.env.ENABLE_CRON.toLowerCase() === "true")
   console.log("Daily agent cron disabled (ENABLE_CRON != true)");
 }
 
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "https://your-frontend.onrender.com",
+  "https://your-app.vercel.app",
+  "https://your-app.netlify.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests from Postman, curl, mobile apps, etc.
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true,
+  })
+);
+
+
 app.use(express.json({ limit: "2mb" }));
 
 app.get("/api/health", (req, res) => {
