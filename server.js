@@ -37,6 +37,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://localhost:3000",
   "https://your-frontend.onrender.com",
+  "https://edubuddy-frontend.onrender.com",
   "https://your-app.vercel.app",
   "https://your-app.netlify.app",
 ];
